@@ -349,7 +349,15 @@ body.zuno-enter .thalia-launcher{animation:zPop .6s ease both .8s}
       padding:24px;
     }
     .tab-content{display:none}
-    .tab-content.active{display:block}
+    .tab-content.active{
+      display:block;
+      animation:zTabEnter .32s cubic-bezier(.16,1,.3,1) both;
+      will-change:opacity,transform;
+    }
+    @keyframes zTabEnter{
+      from{opacity:0;transform:translateY(10px)}
+      to{opacity:1;transform:translateY(0)}
+    }
 
     .page-header{
       display:flex;
@@ -466,7 +474,7 @@ body.zuno-enter .thalia-launcher{animation:zPop .6s ease both .8s}
     .week-title{text-align:center;flex:1;font-weight:700}
     .week-grid{
       display:grid;
-      grid-template-columns:repeat(5,minmax(200px,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:10px;
       overflow-x:auto;
       padding-bottom:10px;
@@ -1364,14 +1372,38 @@ input[type="time"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.9;
 /* ============================================================
    VISUALIZAÇÕES: alternador de modo, seletor de hora, calendário do mês e equipe
 ============================================================ */
-/* Alternador Semana / Calendário / Equipe com indicador deslizante */
-.view-toggle{position:relative;display:inline-flex;gap:2px;padding:4px;background:#eef1ff;border:0;border-radius:14px;overflow:visible}
-.view-toggle button{position:relative;z-index:1;background:transparent;border-radius:10px;padding:9px 16px;font-weight:700;color:#5b6b95;transition:color .25s ease,transform .15s}
-.view-toggle button:hover{color:#0000FF}
-.view-toggle button:active{transform:scale(.96)}
-.view-toggle button.active{background:transparent;color:#fff}
-.vt-ind{position:absolute;top:4px;bottom:4px;left:4px;width:0;border-radius:10px;background:#0000FF;box-shadow:0 6px 14px rgba(0,0,255,.35);
-  transition:left .34s cubic-bezier(.22,.8,.3,1),width .34s cubic-bezier(.22,.8,.3,1);pointer-events:none}
+/* Alternador Semana / Calendário / Equipe com animação suave */
+.view-toggle{position:relative;display:inline-flex;gap:4px;padding:4px;background:#eef1ff;border:0;border-radius:14px;overflow:visible}
+.view-toggle button{position:relative;z-index:1;background:transparent;border:0;border-radius:10px;padding:9px 16px;font-weight:700;color:#5b6b95;transition:background .2s cubic-bezier(.16,1,.3,1),color .2s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1),box-shadow .2s ease;cursor:pointer;will-change:transform}
+.view-toggle button:hover{background:#0000FF !important;color:#fff !important;transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,255,.2)}
+.view-toggle button:active{transform:scale(.95)}
+.view-toggle button.active{background:#0000FF !important;color:#fff !important;box-shadow:0 4px 14px rgba(0,0,255,.35);animation:zPillPop .26s cubic-bezier(.16,1,.3,1)}
+.vt-ind{display:none !important}
+
+@keyframes zPillPop{
+  0%{transform:scale(.92)}
+  50%{transform:scale(1.04)}
+  100%{transform:scale(1)}
+}
+
+/* Animações fluidas ao alternar visões da Agenda */
+.z-view-enter{animation:zViewEnter .32s cubic-bezier(.16,1,.3,1) both;will-change:opacity,transform}
+@keyframes zViewEnter{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.week-grid.z-view-enter .day-column{animation:zDayIn .34s cubic-bezier(.16,1,.3,1) both}
+.week-grid.z-view-enter .day-column:nth-child(1){animation-delay:.02s}
+.week-grid.z-view-enter .day-column:nth-child(2){animation-delay:.05s}
+.week-grid.z-view-enter .day-column:nth-child(3){animation-delay:.08s}
+.week-grid.z-view-enter .day-column:nth-child(4){animation-delay:.11s}
+.week-grid.z-view-enter .day-column:nth-child(5){animation-delay:.14s}
+
+@keyframes zDayIn{
+  from{opacity:0;transform:translateY(12px) scale(.99)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
 /* Seletor de hora: sem barra de rolagem, com esmaecido nas bordas e itens animados */
 .ztp-col{scrollbar-width:none;-ms-overflow-style:none;scroll-snap-type:y proximity;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%)}
@@ -1554,9 +1586,9 @@ body,button,input,select,textarea{font-family:Inter,"Segoe UI",system-ui,-apple-
 
 /* ============ RELATÓRIO POR CLIENTE / PROJETO ============ */
 .rp-switch{margin-bottom:16px}
-#rpToggle button{border-radius:11px;transition:background .2s,color .2s,box-shadow .2s}
-#rpToggle button.active{background:#0000FF;color:#fff;box-shadow:0 6px 16px rgba(0,0,255,.3)}
-#rpToggle button:not(.active):hover{color:#0000FF}
+#rpToggle button{border-radius:11px;transition:background .2s cubic-bezier(.16,1,.3,1),color .2s cubic-bezier(.16,1,.3,1),box-shadow .2s,transform .18s;will-change:transform}
+#rpToggle button:hover{background:#0000FF !important;color:#fff !important;transform:translateY(-1px)}
+#rpToggle button.active{background:#0000FF !important;color:#fff !important;box-shadow:0 6px 16px rgba(0,0,255,.3);animation:zPillPop .26s cubic-bezier(.16,1,.3,1)}
 .rp-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
 .rp-cards .summary-card strong{font-size:24px;overflow:hidden;text-overflow:ellipsis}
 .rp-cards .summary-card small{display:block;color:var(--muted);margin-top:4px;font-size:12px}
@@ -1845,10 +1877,8 @@ body,button,input,select,textarea{font-family:Inter,"Segoe UI",system-ui,-apple-
     <h2 id="authTitle">Entrar</h2>
     <p class="sub" id="authSub"></p>
     <form id="authForm" autocomplete="on">
-      <div id="authNameWrap" style="display:none"><label>Seu nome</label><input id="authName"></div>
-      <label id="authEmailLbl">Usuário ou e-mail</label><input id="authEmail" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="Digite seu usuário ou e-mail">
+      <label id="authEmailLbl">E-mail</label><input id="authEmail" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="Digite seu e-mail">
       <label>Senha</label><div class="zuno-login-pass"><input id="authPass" type="password" autocomplete="current-password" placeholder="Digite sua senha"><button type="button" class="zuno-login-eye" id="authEye" aria-label="Mostrar senha" title="Mostrar/ocultar senha"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
-      <div id="authPass2Wrap" style="display:none"><label>Confirmar senha</label><input id="authPass2" type="password"></div>
       <div class="auth-err" id="authErr" role="alert" aria-live="polite"></div>
       <button class="btn btn-primary" type="submit" style="width:100%;margin-top:10px" id="authBtn">Entrar</button>
     </form>
@@ -2930,7 +2960,13 @@ const STORAGE = {
 };
 
 let companies = loadData(STORAGE.companies);
-let activities = loadData(STORAGE.activities);
+let activities = (loadData(STORAGE.activities) || []).map(a => ({
+  ...a,
+  start: a.start || a.startTime || a.start_time || "",
+  end: a.end || a.endTime || a.end_time || "",
+  startTime: a.startTime || a.start || a.start_time || "",
+  endTime: a.endTime || a.end || a.end_time || ""
+}));
 let hourRecords = loadData(STORAGE.hours);
 let currentWeekStart = getMonday(new Date());
 let currentHoursWeekStart = getMonday(new Date());
@@ -3020,8 +3056,8 @@ async function zunoPushAllToCloud(silent = false) {
         id: String(a.id),
         title: a.title || "Atividade",
         date: a.date || localDateString(new Date()),
-        start_time: a.startTime || null,
-        end_time: a.endTime || null,
+        start_time: a.startTime || a.start || null,
+        end_time: a.endTime || a.end || null,
         duration: Number(a.duration || 0),
         company_id: a.companyId || null,
         project_id: a.projectId || null,
@@ -3196,8 +3232,10 @@ async function zunoPullFromCloud(silent = false) {
         id: a.id,
         title: a.title,
         date: a.date,
-        startTime: a.start_time || "",
-        endTime: a.end_time || "",
+        startTime: a.start_time || a.start || "",
+        endTime: a.end_time || a.end || "",
+        start: a.start || a.start_time || "",
+        end: a.end || a.end_time || "",
         duration: Number(a.duration || 0),
         companyId: a.company_id || "",
         projectId: a.project_id || "",
@@ -3905,6 +3943,12 @@ const MONTH_NAMES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julh
 function setAgendaView(view){
   agendaView = view;
   try{ localStorage.setItem("zuno_agenda_view_v1",view); }catch(e){}
+  const btn = document.getElementById(view === "month" ? "viewMonthBtn" : view === "team" ? "viewTeamBtn" : "viewWeekBtn");
+  if(btn){
+    btn.classList.remove("active");
+    void btn.offsetWidth;
+    btn.classList.add("active");
+  }
   renderAgenda();
 }
 function changeMonth(d){ currentMonth = new Date(currentMonth.getFullYear(),currentMonth.getMonth()+d,1); renderMonthCalendar(); }
@@ -3924,7 +3968,7 @@ function filteredActivitiesForDay(ds){
     .filter(a => !cf || a.companyId === cf)
     .filter(a => !sf || a.status === sf)
     .filter(a => levelMatches(a,lf))
-    .sort((a,b) => a.start.localeCompare(b.start));
+    .sort((a,b) => String(a.start || a.startTime || "").localeCompare(String(b.start || b.startTime || "")));
 }
 
 function chipClass(a){
@@ -4461,8 +4505,7 @@ function showAuth(){
   document.getElementById("authTitle").textContent = setup ? "Criar administrador" : "Acesse sua conta";
   document.getElementById("authSub").textContent = setup ? "Primeiro acesso: cadastre o administrador do Zuno." : "Entre com seu usuário cadastrado no sistema ZUNO.";
   document.getElementById("authEmailLbl").textContent = setup ? "E-mail" : "Usuário ou e-mail";
-  document.getElementById("authNameWrap").style.display = setup ? "block" : "none";
-  document.getElementById("authPass2Wrap").style.display = setup ? "block" : "none";
+  document.getElementById("authEmail").placeholder = setup ? "Digite seu e-mail" : "Digite seu usuário ou e-mail";
   document.getElementById("authBtn").textContent = setup ? "Criar e entrar" : "Entrar";
   document.getElementById("authErr").textContent = ""; document.getElementById("authErr").classList.remove("ok");
   document.getElementById("authForm").reset();
@@ -4504,12 +4547,12 @@ document.addEventListener("DOMContentLoaded",() => {
     if(!email || !pass){ authFail(email ? "Informe sua senha para entrar." : "Preencha usuário e senha para entrar."); return; }
     if(authMode === "setup"){
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ err.textContent = "Informe um e-mail válido."; return; }
-      const name = document.getElementById("authName").value.trim();
-      if(!name){ err.textContent = "Informe seu nome."; return; }
       if(pass.length < 6){ err.textContent = "A senha precisa ter ao menos 6 caracteres."; return; }
-      if(pass !== document.getElementById("authPass2").value){ err.textContent = "As senhas não conferem."; return; }
       const salt = generateId();
       const existing = users.find(u => (u.email || "").toLowerCase() === email) || users.find(u => !u.passwordHash && /admin/i.test(u.role || ""));
+      const emailPrefix = (email.split("@")[0] || "Administrador").replace(/[._-]/g, " ");
+      const derivedName = emailPrefix.replace(/\b\w/g, c => c.toUpperCase()) || "Administrador";
+      const name = (existing && existing.name) ? existing.name : derivedName;
       const rec = existing || {id:generateId(),name,email,phone:"",job:"",dept:"",team:"",photo:"",availability:"disponivel",notif:{reminder:true,closing:true,email:false},status:"active"};
       rec.role = "Administrador"; rec.name = name; rec.email = email; rec.salt = salt; rec.passwordHash = await hashPassword(pass,salt);
       if(!existing) users.push(rec);
@@ -4723,7 +4766,7 @@ function renderTeamBoard(){
       <small><span class="status-dot st-${u.availability || "disponivel"}"></span> ${AVAIL_LABEL[u.availability || "disponivel"]}${u.job ? " · " + escapeHtml(u.job) : ""}</small>
       <small>${mine.length} atividade(s) · ${formatMinutes(weekMin)}${anyOver ? ` <span class="over-badge">sobrecarga</span>` : ""}</small></div></div>`;
     dstr.forEach(ds => {
-      const items = acts.filter(a => (a.ownerId || "") === u.id && a.date === ds).sort((a,b) => a.start.localeCompare(b.start));
+      const items = acts.filter(a => (a.ownerId || "") === u.id && a.date === ds).sort((a,b) => String(a.start || a.startTime || "").localeCompare(String(b.start || b.startTime || "")));
       const live = items.filter(a => a.status !== "cancelado"), mins = live.reduce((s,a) => s + (a.duration || 0),0);
       const over = mins > tgt(ds) || live.length >= 6;
       const blocks = items.map(a => `<div class="tm-block ${a.status === "concluido" || a.outcome === "deu_certo" ? "done" : a.status === "cancelado" ? "cancel" : a.outcome === "nao_deu_certo" ? "fail" : ""}"
@@ -4773,17 +4816,48 @@ function renderAdjust(){
 function renderAgenda(){
   const isMonth = agendaView === "month", isTeam = agendaView === "team";
   const mv = document.getElementById("monthView");
+  const tv = document.getElementById("teamView");
+  const wg = document.getElementById("weekGrid");
+  const wt = document.getElementById("weekToolbar");
   if(mv){
     mv.style.display = isMonth ? "block" : "none";
-    document.getElementById("teamView").style.display = isTeam ? "block" : "none";
+    if(tv) tv.style.display = isTeam ? "block" : "none";
     document.getElementById("agendaFilters").style.display = isTeam ? "none" : "";
     ["weekToolbar","weekendNote","weekGrid"].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = (isMonth || isTeam) ? "none" : ""; });
-    document.getElementById("viewWeekBtn").classList.toggle("active",!isMonth && !isTeam);
-    document.getElementById("viewMonthBtn").classList.toggle("active",isMonth);
-    document.getElementById("viewTeamBtn").classList.toggle("active",isTeam);
+    const bW = document.getElementById("viewWeekBtn");
+    const bM = document.getElementById("viewMonthBtn");
+    const bT = document.getElementById("viewTeamBtn");
+    if(bW) bW.classList.toggle("active",!isMonth && !isTeam);
+    if(bM) bM.classList.toggle("active",isMonth);
+    if(bT) bT.classList.toggle("active",isTeam);
     document.getElementById("agendaHeading").textContent = isMonth ? "Calendário do mês" : isTeam ? "Quadro da equipe" : "Agenda Semanal — Segunda a Sexta";
-    if(isMonth) renderMonthCalendar();
-    if(isTeam) renderTeamBoard();
+
+    if(isMonth){
+      mv.classList.remove("z-view-enter");
+      void mv.offsetWidth;
+      mv.classList.add("z-view-enter");
+      renderMonthCalendar();
+    }
+    if(isTeam){
+      if(tv){
+        tv.classList.remove("z-view-enter");
+        void tv.offsetWidth;
+        tv.classList.add("z-view-enter");
+      }
+      renderTeamBoard();
+    }
+    if(!isMonth && !isTeam){
+      if(wg){
+        wg.classList.remove("z-view-enter");
+        void wg.offsetWidth;
+        wg.classList.add("z-view-enter");
+      }
+      if(wt){
+        wt.classList.remove("z-view-enter");
+        void wt.offsetWidth;
+        wt.classList.add("z-view-enter");
+      }
+    }
   }
   const weekEnd = addDays(currentWeekStart,4);
   document.getElementById("weekTitle").textContent = `${formatDate(currentWeekStart)} até ${formatDate(weekEnd)}`;
@@ -4811,57 +4885,74 @@ function renderAgenda(){
     const date = addDays(currentWeekStart,i);
     const dateString = localDateString(date);
 
-    let dayActivities = activities
-      .filter(a => a.date === dateString)
-      .filter(a => !companyFilter || a.companyId === companyFilter)
-      .filter(a => !statusFilter || a.status === statusFilter)
-      .filter(a => levelMatches(a,levelFilter))
-      .sort((a,b) => a.start.localeCompare(b.start));
+    let dayActivities = [];
+    try{
+      dayActivities = activities
+        .filter(a => a.date === dateString)
+        .filter(a => !companyFilter || a.companyId === companyFilter)
+        .filter(a => !statusFilter || a.status === statusFilter)
+        .filter(a => levelMatches(a,levelFilter))
+        .sort((a,b) => String(a.start || a.startTime || "").localeCompare(String(b.start || b.startTime || "")));
+    }catch(err){
+      console.warn("Erro ao filtrar atividades do dia:", dateString, err);
+    }
 
     const column = document.createElement("div");
     column.className = "day-column" + (dateString === today ? " today" : "");
 
-    column.innerHTML = `
-      <div class="day-header" onclick="openActivityModal('${dateString}')">
-        <strong>${getDayName(date)}</strong>
-        <span>${formatShortDate(date)}</span>
-      </div>
+    try{
+      column.innerHTML = `
+        <div class="day-header" onclick="openActivityModal('${dateString}')">
+          <strong>${getDayName(date)}</strong>
+          <span>${formatShortDate(date)}</span>
+        </div>
 
-      <div class="day-content" onclick="handleDayContentClick(event,'${dateString}')">
-        ${
-          dayActivities.length
-            ? dayActivities.map(activity => `
-              <div
-                class="activity-card status-${activity.status} ${companyHasPhoto(activity.companyId) ? "has-logo" : ""}"
-                style="--client-color:${getCompanyColor(activity.companyId)}"
-                onclick="event.stopPropagation()"
-              >
-                ${companyLogoHtml(activity.companyId,32)}
-                <div class="activity-time">${activity.start} - ${activity.end}</div>
-                <div class="activity-title">${escapeHtml(activity.title)}</div>
-                <div class="activity-meta">
-                  ${escapeHtml(typeLabel(activity.type))}
-                  <br>
-                  ${escapeHtml(companyName(activity.companyId))}
-                  <br>
-                  ${formatMinutes(activity.duration)} · ${escapeHtml(statusLabel(activity.status))}
-                  ${projectBadge(activity)}
-                  ${levelBadge(activity)}
+        <div class="day-content" onclick="handleDayContentClick(event,'${dateString}')">
+          ${
+            dayActivities.length
+              ? dayActivities.map(activity => `
+                <div
+                  class="activity-card status-${activity.status} ${companyHasPhoto(activity.companyId) ? "has-logo" : ""}"
+                  style="--client-color:${getCompanyColor(activity.companyId)}"
+                  onclick="event.stopPropagation()"
+                >
+                  ${companyLogoHtml(activity.companyId,32)}
+                  <div class="activity-time">${(activity.start || activity.startTime) ? `${activity.start || activity.startTime} - ${activity.end || activity.endTime}` : "Sem horário"}</div>
+                  <div class="activity-title">${escapeHtml(activity.title)}</div>
+                  <div class="activity-meta">
+                    ${escapeHtml(typeLabel(activity.type))}
+                    <br>
+                    ${escapeHtml(companyName(activity.companyId))}
+                    <br>
+                    ${formatMinutes(activity.duration)} · ${escapeHtml(statusLabel(activity.status))}
+                    ${projectBadge(activity)}
+                    ${levelBadge(activity)}
+                  </div>
+
+                  ${renderOutcomeBox(activity)}
+                  <div class="activity-actions">
+                    <button class="btn btn-outline btn-small" onclick="openActivityModal(null,'${activity.id}')">Editar</button>
+                    <button class="btn btn-danger btn-small" onclick="deleteActivity('${activity.id}',event)">Excluir</button>
+                  </div>
                 </div>
-
-                ${renderOutcomeBox(activity)}
-                <div class="activity-actions">
-                  <button class="btn btn-outline btn-small" onclick="openActivityModal(null,'${activity.id}')">Editar</button>
-                  <button class="btn btn-danger btn-small" onclick="deleteActivity('${activity.id}',event)">Excluir</button>
-                </div>
-              </div>
-            `).join("")
-            : `<div class="empty-day">Clique para adicionar uma atividade</div>`
-        }
-      </div>
-    `;
-
-    column.insertAdjacentHTML("beforeend",`<button type="button" class="day-add" onclick="openActivityModal('${dateString}')">+ Adicionar</button>`);
+              `).join("")
+              : `<div class="empty-day">Clique para adicionar uma atividade</div>`
+          }
+        </div>
+      `;
+      column.insertAdjacentHTML("beforeend",`<button type="button" class="day-add" onclick="openActivityModal('${dateString}')">+ Adicionar</button>`);
+    }catch(e){
+      console.error("Erro ao renderizar coluna do dia:", dateString, e);
+      column.innerHTML = `
+        <div class="day-header" onclick="openActivityModal('${dateString}')">
+          <strong>${getDayName(date)}</strong>
+          <span>${formatShortDate(date)}</span>
+        </div>
+        <div class="day-content" onclick="handleDayContentClick(event,'${dateString}')">
+          <div class="empty-day">Clique para adicionar uma atividade</div>
+        </div>`;
+      column.insertAdjacentHTML("beforeend",`<button type="button" class="day-add" onclick="openActivityModal('${dateString}')">+ Adicionar</button>`);
+    }
     grid.appendChild(column);
   }
 }
@@ -6902,6 +6993,7 @@ function openSystemTab(tabId){
 
   document.querySelectorAll(".tab-btn").forEach(item => item.classList.toggle("active",item.dataset.tab === tabId));
   document.querySelectorAll(".tab-content").forEach(item => item.classList.remove("active"));
+  void section.offsetWidth;
   section.classList.add("active");
   document.querySelectorAll(".side-item").forEach(item => item.classList.toggle("active",item.dataset.side === SIDE_GROUP[tabId]));
   window.scrollTo(0,0);
@@ -10609,15 +10701,13 @@ checkThaliaClosing();
   }
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded",setupToggle); else setupToggle();
 
-  // Animação de entrada só quando o mês/semana muda (não a cada clique)
-  let lastMonth = "", lastTeam = "";
+  // Animação de entrada do mês e da equipe
   const _rm = window.renderMonthCalendar;
   if(typeof _rm === "function"){
     window.renderMonthCalendar = function(){
       _rm.apply(this,arguments);
       const g = document.getElementById("monthGrid");
-      const key = (document.querySelector(".month-title") || {}).textContent || "";
-      if(g && key !== lastMonth){ lastMonth = key; g.classList.remove("m-anim"); void g.offsetWidth; g.classList.add("m-anim"); setTimeout(() => g.classList.remove("m-anim"),900); }
+      if(g){ g.classList.remove("m-anim"); void g.offsetWidth; g.classList.add("m-anim"); setTimeout(() => g.classList.remove("m-anim"),900); }
     };
   }
   const _rt = window.renderTeamBoard;
@@ -10625,8 +10715,7 @@ checkThaliaClosing();
     window.renderTeamBoard = function(){
       _rt.apply(this,arguments);
       const b = document.getElementById("teamBoard");
-      const key = b ? [...b.querySelectorAll(".tm-h small")].map(x => x.textContent).join("|") + (b.querySelectorAll(".tm-who").length) : "";
-      if(b && key !== lastTeam){ lastTeam = key; b.classList.remove("t-anim"); void b.offsetWidth; b.classList.add("t-anim"); setTimeout(() => b.classList.remove("t-anim"),1000); }
+      if(b){ b.classList.remove("t-anim"); void b.offsetWidth; b.classList.add("t-anim"); setTimeout(() => b.classList.remove("t-anim"),1000); }
     };
   }
 })();
@@ -11788,9 +11877,26 @@ function rpPrintFallback(d){
 (function(){
   const $ = id => document.getElementById(id);
   function showView(client){
-    $("rpView").style.display = client ? "" : "none";
+    const rpv = $("rpView");
+    if(rpv){
+      rpv.style.display = client ? "" : "none";
+      if(client){
+        rpv.classList.remove("z-view-enter");
+        void rpv.offsetWidth;
+        rpv.classList.add("z-view-enter");
+      }
+    }
     $("rpBtnClient").classList.toggle("active",client); $("rpBtnDash").classList.toggle("active",!client);
-    [...$("reports").children].forEach(el => { if(!el.matches(".page-header,.rp-switch,#rpView")) el.style.display = client ? "none" : ""; });
+    [...$("reports").children].forEach(el => {
+      if(!el.matches(".page-header,.rp-switch,#rpView")){
+        el.style.display = client ? "none" : "";
+        if(!client){
+          el.classList.remove("z-view-enter");
+          void el.offsetWidth;
+          el.classList.add("z-view-enter");
+        }
+      }
+    });
     if(client) renderClientReport();
   }
   window.rpShowView = showView;
